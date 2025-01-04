@@ -13,9 +13,9 @@ export const WeatherCard = ({ title, isCelsius, weather }: WeatherCardProps) => 
   return (
     <div className="p-4 border rounded-md shadow-md">
       <div className="flex gap-12">
-        <h2 className="font-bold">{title}</h2>
-        <div className="ml-auto">{temp.toFixed(1)}°</div>
+        <h2 className="font-bold w-20">{title}</h2>
         <div>{weather.condition.text}</div>
+        <div className="ml-auto">{temp.toFixed(1)}°</div>
       </div>
       {/* <div className="flex justify-between gap-12 mt-4">
         <div className="flex items-end gap-2">
