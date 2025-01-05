@@ -24,15 +24,16 @@ export const useFetchWeather = () => {
         try {
           const today = Math.floor(Date.now() / 1000)
           const yesterday = today - 24 * 60 * 60; // 24 hours
-          const response = await fetch(
-            `http://api.weatherapi.com/v1/history.json
-              ?key=${import.meta.env.VITE_WEATHERAPI_API_KEY}
-              &q=${coords.latitude},${coords.longitude}
-              &unixdt=${yesterday}
-              &unixend_dt=${today}
-              &hour=${new Date().getHours()}
-            `
-          );
+
+          const params = new URLSearchParams({
+            key: import.meta.env.VITE_WEATHERAPI_API_KEY,
+            q: `${coords.latitude},${coords.longitude}`,
+            unixdt: yesterday.toString(),
+            unixend_dt: today.toString(),
+            hour: new Date().getHours().toString(),
+          });
+
+          const response = await fetch(`http://api.weatherapi.com/v1/history.json?${params.toString()}`);
           const data = await response.json() as ApiError | ApiData;
           
           if (isApiError(data)) {
