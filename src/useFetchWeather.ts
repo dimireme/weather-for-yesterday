@@ -33,7 +33,7 @@ export const useFetchWeather = () => {
             hour: new Date().getHours().toString(),
           });
 
-          const response = await fetch(`http://api.weatherapi.com/v1/history.json?${params.toString()}`);
+          const response = await fetch(`https://api.weatherapi.com/v1/history.json?${params.toString()}`);
           const data = await response.json() as ApiError | ApiData;
           
           if (isApiError(data)) {
