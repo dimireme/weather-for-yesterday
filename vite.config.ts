@@ -6,4 +6,7 @@ import { ghPages } from 'vite-plugin-gh-pages';
 export default defineConfig({
   base: '/weather-for-yesterday/',
   plugins: [react(), ghPages()],
+  build: {
+    sourcemap: false,
+  },
 })
