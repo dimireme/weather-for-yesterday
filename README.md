@@ -1,52 +1,59 @@
-# React + TypeScript + Vite
+# Weather For Yesterday
 
-<https://www.weatherapi.com/docs/>
+Приложение для просмотра погоды за вчерашний день. Позволяет узнать исторические данные о погоде для текущей локации.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Технологии
 
-Currently, two official plugins are available:
+- React 18
+- TypeScript
+- Vite
+- TailwindCSS
+- WeatherAPI
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Установка и запуск
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+1. Клонируйте репозиторий:
+```bash
+git clone https://github.com/your-username/weather-for-yesterday.git
+cd weather-for-yesterday
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
-
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+2. Установите зависимости:
+```bash
+yarn install
 ```
+
+3. Создайте файл `.env` в корневой директории и добавьте ваш API ключ:
+```env
+VITE_WEATHER_API_KEY=your_api_key_here
+```
+
+4. Запустите приложение в режиме разработки:
+```bash
+yarn dev
+```
+
+## Деплой на GitHub Pages
+
+1. Убедитесь, что все изменения закоммичены:
+```bash
+git add .
+git commit -m "Your commit message"
+git push
+```
+
+2. Запустите команду деплоя:
+```bash
+yarn deploy
+```
+
+После успешного деплоя приложение будет доступно по адресу:
+`https://[ваш-username].github.io/weather-for-yesterday/`
+
+## API
+
+Приложение использует [WeatherAPI](https://www.weatherapi.com/) для получения данных о погоде. Для работы приложения необходим API ключ.
+
+## Лицензия
+
+MIT
