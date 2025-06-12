@@ -10,12 +10,18 @@ export const useFetchWeather = () => {
     today: ForecastHour & Astro;
   } | null>(null);
 
-  useEffect(() => {
-    // Get geolocation
+  const resetAndUpdate = () => {
+    setCoords(null);
+    setError(null);
+    setWeather(null);
     navigator.geolocation.getCurrentPosition(
       (position) => setCoords(position.coords),
-      () => setError("Cant get your geolocation")
+      (error) => setError("Cant get your geolocation: " + error.message)
     );
+  };
+
+  useEffect(() => {
+    resetAndUpdate();
   }, []);
 
   useEffect(() => {
@@ -35,7 +41,7 @@ export const useFetchWeather = () => {
 
           const response = await fetch(`https://api.weatherapi.com/v1/history.json?${params.toString()}`);
           const data = await response.json() as ApiError | ApiData;
-          
+
           if (isApiError(data)) {
             setError(data.error.message)
           } else {
@@ -53,7 +59,7 @@ export const useFetchWeather = () => {
     }
   }, [coords]);
 
-  return { weather, error }
+  return { weather, error, resetAndUpdate }
 }
 
 function isApiError(data: ApiError | ApiData): data is ApiError {
