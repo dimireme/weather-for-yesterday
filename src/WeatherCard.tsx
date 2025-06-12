@@ -1,4 +1,3 @@
-// import { FiSunrise, FiSunset } from "react-icons/fi";
 import { Astro, ForecastHour } from "./types";
 
 interface WeatherCardProps {
@@ -17,17 +16,6 @@ export const WeatherCard = ({ title, isCelsius, weather }: WeatherCardProps) => 
         <div>{weather.condition.text}</div>
         <div className="ml-auto">{temp.toFixed(1)}°</div>
       </div>
-      {/* <div className="flex justify-between gap-12 mt-4">
-        <div className="flex items-end gap-2">
-          <FiSunrise size={24} />
-          <span>{weather.sunrise}</span>
-        </div>
-        <div>{temp.toFixed(1)}°</div>
-        <div className="flex items-end gap-2">
-          <FiSunset size={24} />
-          <span>{weather.sunset}</span>
-        </div>
-      </div>   */}
     </div>
   )
 }
