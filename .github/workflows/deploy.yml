@@ -31,6 +31,7 @@ jobs:
             cd fe
             yarn install
             yarn build
+            cp -r /root/weather-for-yesterday/fe/dist/* /var/www/weather-for-yesterday/
 
             # Бэкенд зависимости
             cd ../be
