@@ -28,6 +28,11 @@ export const useFetchWeather = () => {
     if (coords) {
       const fetchWeather = async () => {
         try {
+          if (!navigator.onLine) {
+            setError("No internet connection");
+            return;
+          }
+
           const today = Math.floor(Date.now() / 1000)
           const yesterday = today - 24 * 60 * 60; // 24 hours
 
