@@ -23,3 +23,4 @@ fe/node_modules
 fe/dist
 fe/dist-ssr
 be/.env
+be/node_modules
