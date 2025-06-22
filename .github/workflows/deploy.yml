@@ -1,18 +1,13 @@
-name: Deploy to VPS
+name: Deploy containers to VPS
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch: # запуск вручную через GitHub Actions UI
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
       - name: Setup SSH key
         run: |
           mkdir -p ~/.ssh
@@ -23,26 +18,6 @@ jobs:
       - name: Deploy to VPS
         run: |
           ssh -i ~/.ssh/id_ed25519 root@168.100.11.97 << 'EOF'
-            set -e
             cd /root/weather-for-yesterday
-            git pull origin main
-
-            # Фронтенд билд
-            cd fe
-            yarn install
-            yarn build
-            cp -r /root/weather-for-yesterday/fe/dist/* /var/www/weather-for-yesterday/
-
-            # Бэкенд зависимости
-            cd ../be
-            yarn install
-
-            # Запуск или рестарт pm2
-            if pm2 list | grep -q "weather-api"; then
-              pm2 restart weather-api
-            else
-              pm2 start server.js --name weather-api
-            fi
-
-            pm2 save
+            ./deploy.sh
           EOF

@@ -12,7 +12,7 @@ app.get('/api/weather', async (req, res) => {
     const { q, unixdt, unixend_dt, hour } = req.query;
 
     const params = new URLSearchParams({
-      key: process.env.WEATHERAPI_API_KEY,
+      key: process.env.WEATHER_API_KEY,
       q,
       unixdt,
       unixend_dt,
