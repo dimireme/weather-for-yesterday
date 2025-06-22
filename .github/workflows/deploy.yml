@@ -1,14 +1,42 @@
-name: Deploy containers to VPS
+name: Build & Push to GitHub Container Registry
 
 on:
-  workflow_dispatch: # запуск вручную через GitHub Actions UI
+  push:
+    branches:
+      - main
 
 jobs:
-  deploy:
+  build-and-push:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Setup SSH key
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GHCR_PAT }}
+
+      - name: Build & push frontend to GitHub Container Registry
+        uses: docker/build-push-action@v6
+        with:
+          context: ./fe
+          file: ./fe/Dockerfile
+          push: true
+          tags: ghcr.io/dimireme/weather-frontend:latest
+
+      - name: Build & push backend to GitHub Container Registry
+        uses: docker/build-push-action@v6
+        with:
+          context: ./be
+          file: ./be/Dockerfile
+          push: true
+          tags: ghcr.io/dimireme/weather-backend:latest
+
+      - name: Setup SSH key for connect to VPS
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.VPS_DEPLOY_KEY }}" > ~/.ssh/id_ed25519
