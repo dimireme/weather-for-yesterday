@@ -6,4 +6,5 @@ COPY . .
 RUN yarn build
 
 FROM nginx:alpine
-COPY --from=builder /app/dist /usr/share/nginx/html/weather-for-yesterday
+RUN rm -rf /usr/share/nginx/html/*
+COPY --from=builder /app/dist /usr/share/nginx/html
