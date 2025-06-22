@@ -1,4 +1,4 @@
-name: Build & Push to GitHub Container Registry
+name: Build, Push to GHCR & Deploy to VPS
 
 on:
   push:
@@ -8,7 +8,6 @@ on:
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -36,7 +35,12 @@ jobs:
           push: true
           tags: ghcr.io/dimireme/weather-backend:latest
 
-      - name: Setup SSH key for connect to VPS
+  deploy:
+    needs: build-and-push # эта джоба запустится только если билд прошёл успешно
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Setup SSH key
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.VPS_DEPLOY_KEY }}" > ~/.ssh/id_ed25519
