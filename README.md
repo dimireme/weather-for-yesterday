@@ -1,6 +1,8 @@
 # Weather For Yesterday
 
-Приложение для просмотра погоды за вчерашний день. Позволяет узнать исторические данные о погоде для текущей локации.
+Приложение для просмотра погоды за вчерашний день.
+
+https://weatherforyesterday.com/
 
 ## Технологии
 
@@ -8,52 +10,39 @@
 - TypeScript
 - Vite
 - TailwindCSS
-- WeatherAPI
+- [WeatherAPI](https://www.weatherapi.com/)
 
-## Установка и запуск
+## CI/CD
 
-1. Клонируйте репозиторий:
-```bash
-git clone https://github.com/your-username/weather-for-yesterday.git
-cd weather-for-yesterday
+При билде фронт и бэк докеризуются отдельно и хостятся на GitHub Container Registry (GHCR).
+
+При деплое происходит коннект к VPS и на VPS стартует скрипт `deploy.sh`.
+
+Этот скрипт коннектится к GHCR, стягивает контейнеры и стартует их.
+
+## Локальная разработка
+
+Фронт и бэкенд запускаются в разных терминалах.
+
+#### Фронт
+
 ```
-
-2. Установите зависимости:
-```bash
+cd fe
 yarn install
-```
-
-3. Создайте файл `.env` в корневой директории и добавьте ваш API ключ:
-```env
-VITE_WEATHER_API_KEY=your_api_key_here
-```
-
-4. Запустите приложение в режиме разработки:
-```bash
 yarn dev
 ```
 
-## Деплой на GitHub Pages
+#### Бэкенд
 
-1. Убедитесь, что все изменения закоммичены:
-```bash
-git add .
-git commit -m "Your commit message"
-git push
+```
+cd be
+cp .env.example .env
+ysrn install
+node server.js
 ```
 
-2. Запустите команду деплоя:
-```bash
-yarn deploy
+Приложение использует [WeatherAPI](https://www.weatherapi.com/) для получения данных о погоде. Для работы приложения необходим API ключ. Добавьте его в файле `.env`:
+
+```env
+VITE_WEATHER_API_KEY=your_api_key_here
 ```
-
-После успешного деплоя приложение будет доступно по адресу:
-`https://[ваш-username].github.io/weather-for-yesterday/`
-
-## API
-
-Приложение использует [WeatherAPI](https://www.weatherapi.com/) для получения данных о погоде. Для работы приложения необходим API ключ.
-
-## Лицензия
-
-MIT
