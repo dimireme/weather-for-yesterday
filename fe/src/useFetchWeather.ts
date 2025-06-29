@@ -50,9 +50,7 @@ export const useFetchWeather = () => {
             hour: new Date().getHours().toString(),
           });
 
-          const response = await fetch(
-            `http://localhost:3000/api/weather?${params.toString()}`
-          );
+          const response = await fetch(`/api/weather?${params.toString()}`);
           const data = (await response.json()) as ApiError | ApiData;
 
           if (isApiError(data)) {
