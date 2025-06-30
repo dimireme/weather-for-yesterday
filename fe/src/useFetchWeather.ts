@@ -27,6 +27,38 @@ export const useFetchWeather = () => {
     );
   };
 
+  const fetchByLocation = async (q: string) => {
+    try {
+      setError(null);
+      setWeather(null);
+      if (!navigator.onLine) {
+        setError('No internet connection');
+        return;
+      }
+      const today = Math.floor(Date.now() / 1000);
+      const yesterday = today - 24 * 60 * 60;
+      const params = new URLSearchParams({
+        q,
+        unixdt: yesterday.toString(),
+        unixend_dt: today.toString(),
+        hour: new Date().getHours().toString(),
+      });
+      const response = await fetch(`/api/weather?${params.toString()}`);
+      const data = (await response.json()) as ApiError | ApiData;
+      if (isApiError(data)) {
+        setError(data.error.message);
+      } else {
+        setWeather({
+          location: data.location,
+          yesterday: parseWeather(data.forecast.forecastday[0]),
+          today: parseWeather(data.forecast.forecastday[1]),
+        });
+      }
+    } catch {
+      setError('Cant fetch weather data');
+    }
+  };
+
   useEffect(() => {
     resetAndUpdate();
   }, []);
@@ -70,7 +102,7 @@ export const useFetchWeather = () => {
     }
   }, [coords]);
 
-  return { weather, error, resetAndUpdate };
+  return { weather, error, resetAndUpdate, fetchByLocation };
 };
 
 function isApiError(data: ApiError | ApiData): data is ApiError {
