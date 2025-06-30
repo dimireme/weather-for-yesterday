@@ -1,0 +1,1 @@
+export { PwaPage } from './PwaPage';

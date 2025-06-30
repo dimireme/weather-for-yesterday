@@ -2,8 +2,5 @@
 @tailwind components;
 @tailwind utilities;
 body {
-  display: flex;
-  align-items: center;
-  height: 100vh;
-  justify-content: center;
+  /* можно добавить базовый фон, если нужно */
 }
