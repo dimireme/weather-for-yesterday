@@ -1,70 +1,101 @@
 'use client';
 
-import { useState } from 'react';
 import Link from 'next/link';
-import { Button, Drawer, Menu } from 'antd';
-import {
-  MenuOutlined,
-  HomeOutlined,
-  InfoCircleOutlined,
-  LockOutlined,
-} from '@ant-design/icons';
+import { useRouter } from 'next/navigation';
+import { Button, Dropdown, Switch } from 'antd';
 import type { MenuProps } from 'antd';
+import {
+  TbMenu2,
+  TbHome,
+  TbInfoCircle,
+  TbLock,
+  TbMoon,
+  TbTemperatureSnow,
+} from 'react-icons/tb';
+import { useSettings } from './SettingsContext';
 
-const menuItems: MenuProps['items'] = [
-  {
-    key: '/',
-    icon: <HomeOutlined />,
-    label: <Link href="/">Главная</Link>,
-  },
-  {
-    key: '/about',
-    icon: <InfoCircleOutlined />,
-    label: <Link href="/about">О приложении</Link>,
-  },
-  {
-    key: '/privacy',
-    icon: <LockOutlined />,
-    label: <Link href="/privacy">Конфиденциальность</Link>,
-  },
-];
+// Предотвращает закрытие dropdown и вызывает callback
+const stopPropagationAnd = (callback: () => void) => (e: React.MouseEvent) => {
+  e.stopPropagation();
+  callback();
+};
 
 export function AppHeader() {
-  const [drawerOpen, setDrawerOpen] = useState(false);
+  const router = useRouter();
+  const { isDark, toggleTheme, temperatureUnit, toggleTemperatureUnit } =
+    useSettings();
 
-  const showDrawer = () => setDrawerOpen(true);
-  const closeDrawer = () => setDrawerOpen(false);
+  const menuItems: MenuProps['items'] = [
+    {
+      key: '/',
+      icon: <TbHome size={18} />,
+      label: 'Home',
+      onClick: () => router.push('/'),
+    },
+    {
+      key: '/privacy',
+      icon: <TbLock size={18} />,
+      label: 'Privacy',
+      onClick: () => router.push('/privacy'),
+    },
+    {
+      key: '/about',
+      icon: <TbInfoCircle size={18} />,
+      label: 'About',
+      onClick: () => router.push('/about'),
+    },
+    {
+      type: 'divider',
+    },
+    {
+      key: 'theme',
+      icon: <TbMoon size={18} />,
+      label: (
+        <div
+          className="flex items-center justify-between gap-4 w-full"
+          onClick={stopPropagationAnd(toggleTheme)}
+        >
+          <span>Dark Theme</span>
+          <Switch size="small" checked={isDark} />
+        </div>
+      ),
+    },
+    {
+      key: 'unit',
+      icon: <TbTemperatureSnow size={18} />,
+      label: (
+        <div
+          className="flex items-center justify-between gap-4 w-full"
+          onClick={stopPropagationAnd(toggleTemperatureUnit)}
+        >
+          <span>Use °F</span>
+          <Switch size="small" checked={temperatureUnit === 'fahrenheit'} />
+        </div>
+      ),
+    },
+  ];
 
   return (
-    <header className="flex items-center justify-between p-4 border-b border-gray-200">
+    <header className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
       <Link
         href="/"
-        className="text-xl font-semibold text-gray-800 no-underline"
+        className="text-xl font-semibold no-underline"
+        style={{ color: isDark ? '#fff' : '#1f2937' }}
       >
         Weather For Yesterday
       </Link>
 
-      <Button
-        type="text"
-        icon={<MenuOutlined />}
-        onClick={showDrawer}
-        aria-label="Открыть меню"
-      />
-
-      <Drawer
-        title="Меню"
-        placement="right"
-        onClose={closeDrawer}
-        open={drawerOpen}
-        width={280}
+      <Dropdown
+        menu={{ items: menuItems }}
+        trigger={['click']}
+        placement="bottomRight"
       >
-        <Menu
-          mode="vertical"
-          items={menuItems}
-          onClick={closeDrawer}
-          selectable={false}
+        <Button
+          type="text"
+          icon={<TbMenu2 size={20} />}
+          aria-label="Открыть меню"
         />
-      </Drawer>
+      </Dropdown>
     </header>
   );
 }

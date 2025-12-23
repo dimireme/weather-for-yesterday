@@ -2,18 +2,14 @@
 
 import { ConfigProvider, theme } from 'antd';
 import { ReactNode } from 'react';
+import { SettingsProvider, useSettings } from './SettingsContext';
 
 interface ThemeProviderProps {
   children: ReactNode;
 }
 
-/**
- * Обёртка для antd ConfigProvider
- * Место для будущей логики переключения темы
- */
-export function ThemeProvider({ children }: ThemeProviderProps) {
-  // TODO: добавить логику переключения темы (localStorage)
-  const isDark = false;
+function AntdThemeProvider({ children }: ThemeProviderProps) {
+  const { isDark } = useSettings();
 
   return (
     <ConfigProvider
@@ -26,5 +22,13 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
     >
       {children}
     </ConfigProvider>
+  );
+}
+
+export function ThemeProvider({ children }: ThemeProviderProps) {
+  return (
+    <SettingsProvider>
+      <AntdThemeProvider>{children}</AntdThemeProvider>
+    </SettingsProvider>
   );
 }
