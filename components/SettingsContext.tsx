@@ -15,6 +15,8 @@ interface SettingsContextType {
   toggleTheme: () => void;
   temperatureUnit: TemperatureUnit;
   toggleTemperatureUnit: () => void;
+  isUseMyLocation: boolean;
+  toggleUseMyLocation: () => void;
 }
 
 const SettingsContext = createContext<SettingsContextType | undefined>(
@@ -23,6 +25,7 @@ const SettingsContext = createContext<SettingsContextType | undefined>(
 
 const THEME_KEY = 'w4y_theme';
 const UNIT_KEY = 'w4y_temperature_unit';
+const USE_MY_LOCATION_KEY = 'w4y_use_my_location';
 
 interface SettingsProviderProps {
   children: ReactNode;
@@ -33,17 +36,22 @@ export function SettingsProvider({ children }: SettingsProviderProps) {
   const [temperatureUnit, setTemperatureUnit] =
     useState<TemperatureUnit>('celsius');
   const [mounted, setMounted] = useState(false);
+  const [isUseMyLocation, setIsUseMyLocation] = useState(false);
 
   // Загрузка настроек из localStorage при монтировании
   useEffect(() => {
     const savedTheme = localStorage.getItem(THEME_KEY);
     const savedUnit = localStorage.getItem(UNIT_KEY) as TemperatureUnit | null;
+    const savedUseMyLocation = localStorage.getItem(USE_MY_LOCATION_KEY);
 
     if (savedTheme === 'dark') {
       setIsDark(true);
     }
     if (savedUnit === 'fahrenheit') {
       setTemperatureUnit('fahrenheit');
+    }
+    if (savedUseMyLocation === 'true') {
+      setIsUseMyLocation(true);
     }
     setMounted(true);
   }, []);
@@ -63,15 +71,29 @@ export function SettingsProvider({ children }: SettingsProviderProps) {
     }
   }, [temperatureUnit, mounted]);
 
+  useEffect(() => {
+    if (mounted) {
+      localStorage.setItem('useMyLocation', isUseMyLocation ? 'true' : 'false');
+    }
+  }, [isUseMyLocation, mounted]);
+
   const toggleTheme = () => setIsDark((prev) => !prev);
   const toggleTemperatureUnit = () =>
     setTemperatureUnit((prev) =>
       prev === 'celsius' ? 'fahrenheit' : 'celsius'
     );
+  const toggleUseMyLocation = () => setIsUseMyLocation((prev) => !prev);
 
   return (
     <SettingsContext.Provider
-      value={{ isDark, toggleTheme, temperatureUnit, toggleTemperatureUnit }}
+      value={{
+        isDark,
+        toggleTheme,
+        temperatureUnit,
+        toggleTemperatureUnit,
+        isUseMyLocation,
+        toggleUseMyLocation,
+      }}
     >
       {children}
     </SettingsContext.Provider>

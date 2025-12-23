@@ -11,6 +11,7 @@ import {
   TbLock,
   TbMoon,
   TbTemperatureSnow,
+  TbCurrentLocation,
 } from 'react-icons/tb';
 import { useSettings } from './SettingsContext';
 
@@ -22,8 +23,14 @@ const stopPropagationAnd = (callback: () => void) => (e: React.MouseEvent) => {
 
 export function AppHeader() {
   const router = useRouter();
-  const { isDark, toggleTheme, temperatureUnit, toggleTemperatureUnit } =
-    useSettings();
+  const {
+    isDark,
+    toggleTheme,
+    temperatureUnit,
+    toggleTemperatureUnit,
+    isUseMyLocation,
+    toggleUseMyLocation,
+  } = useSettings();
 
   const menuItems: MenuProps['items'] = [
     {
@@ -70,6 +77,19 @@ export function AppHeader() {
         >
           <span>Use °F</span>
           <Switch size="small" checked={temperatureUnit === 'fahrenheit'} />
+        </div>
+      ),
+    },
+    {
+      key: 'location',
+      icon: <TbCurrentLocation size={18} />,
+      label: (
+        <div
+          className="flex items-center justify-between gap-4 w-full"
+          onClick={stopPropagationAnd(toggleUseMyLocation)}
+        >
+          <span>Use my location</span>
+          <Switch size="small" checked={isUseMyLocation} />
         </div>
       ),
     },
