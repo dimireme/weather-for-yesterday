@@ -92,7 +92,7 @@ export function AppHeader() {
       >
         <Button
           type="text"
-          icon={<TbMenu2 size={20} />}
+          icon={<TbMenu2 size={24} />}
           aria-label="Открыть меню"
         />
       </Dropdown>

@@ -6,12 +6,29 @@
 html,
 body {
   min-height: 100vh;
+  margin: 0;
+  padding: 0;
 }
 
-/* Центрирование основного контента */
-.main-content {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 24px 16px;
+/* Фон за пределами контента - светлая тема */
+body {
+  background-color: #e8e8e8;
+  transition: background-color 0.3s ease;
+}
+
+/* Фон за пределами контента - тёмная тема */
+body.dark {
+  background-color: #141414;
+}
+
+/* Контентная область - светлая тема */
+.content-wrapper {
+  background-color: #ffffff;
+  transition: background-color 0.3s ease;
+}
+
+/* Контентная область - тёмная тема */
+body.dark .content-wrapper {
+  background-color: #1f1f1f;
 }
 

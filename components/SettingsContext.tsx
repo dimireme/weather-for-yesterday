@@ -48,10 +48,11 @@ export function SettingsProvider({ children }: SettingsProviderProps) {
     setMounted(true);
   }, []);
 
-  // Сохранение темы
+  // Сохранение темы и установка класса на body
   useEffect(() => {
     if (mounted) {
       localStorage.setItem(THEME_KEY, isDark ? 'dark' : 'light');
+      document.body.classList.toggle('dark', isDark);
     }
   }, [isDark, mounted]);
 
