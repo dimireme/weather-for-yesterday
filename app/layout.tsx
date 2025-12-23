@@ -19,11 +19,9 @@ export default function RootLayout({
       <body>
         <AntdRegistry>
           <ThemeProvider>
-            <div className="min-h-screen flex flex-col">
+            <div className="min-h-screen flex flex-col max-w-[1080px] mx-auto">
               <AppHeader />
-              <main className="flex-1">
-                <div className="main-content">{children}</div>
-              </main>
+              <main className="flex-1">{children}</main>
             </div>
           </ThemeProvider>
         </AntdRegistry>

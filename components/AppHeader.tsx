@@ -41,7 +41,7 @@ export function AppHeader() {
         href="/"
         className="text-xl font-semibold text-gray-800 no-underline"
       >
-        W4Y Weather
+        Weather For Yesterday
       </Link>
 
       <Button
