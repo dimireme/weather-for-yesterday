@@ -5,7 +5,7 @@ import { Typography, AutoComplete, message, Spin, Card } from 'antd';
 import type { AutoCompleteProps } from 'antd';
 import { useSettings } from '@/components/SettingsContext';
 
-const { Title, Paragraph } = Typography;
+const { Title, Paragraph, Text } = Typography;
 
 interface LocationOption {
   value: string;
@@ -32,8 +32,14 @@ interface WeatherData {
   time_epoch: number;
 }
 
+interface LocationInfo {
+  name: string;
+  region: string;
+  country: string;
+}
+
 export default function HomePage() {
-  const { temperatureUnit } = useSettings();
+  const { temperatureUnit, isUseMyLocation, coordinates } = useSettings();
   const [options, setOptions] = useState<LocationOption[]>([]);
   const [loading, setLoading] = useState(false);
   const [weatherLoading, setWeatherLoading] = useState(false);
@@ -41,8 +47,10 @@ export default function HomePage() {
   const [weatherData, setWeatherData] = useState<{
     current: WeatherData | null;
     yesterday: WeatherData | null;
-  }>({ current: null, yesterday: null });
+    location: LocationInfo | null;
+  }>({ current: null, yesterday: null, location: null });
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const lastLoadedCoordsRef = useRef<string | null>(null);
 
   const searchLocations = async (query: string) => {
     if (!query || query.trim().length < 2) {
@@ -165,10 +173,24 @@ export default function HomePage() {
         }
       }
 
-      setWeatherData({ current: currentWeather, yesterday: yesterdayWeather });
+      // Сохраняем информацию о локации, если она есть в ответе
+      const locationInfo: LocationInfo | null = data.location
+        ? {
+            name: data.location.name,
+            region: data.location.region,
+            country: data.location.country,
+          }
+        : null;
+
+      setWeatherData({
+        current: currentWeather,
+        yesterday: yesterdayWeather,
+        location: locationInfo,
+      });
     } catch (error) {
       console.error('Ошибка при получении погоды:', error);
       message.error('Не удалось получить данные о погоде');
+      return null;
     } finally {
       setWeatherLoading(false);
     }
@@ -184,6 +206,23 @@ export default function HomePage() {
     }
   };
 
+  // Автоматическая загрузка погоды при включённой геолокации
+  useEffect(() => {
+    if (isUseMyLocation && coordinates) {
+      const coordsKey = `${coordinates.latitude},${coordinates.longitude}`;
+      // Загружаем данные только если координаты изменились
+      if (lastLoadedCoordsRef.current !== coordsKey) {
+        lastLoadedCoordsRef.current = coordsKey;
+        fetchWeather(coordinates.latitude, coordinates.longitude);
+      }
+    } else if (!isUseMyLocation) {
+      // Сбрасываем при выключении геолокации
+      lastLoadedCoordsRef.current = null;
+      setWeatherData({ current: null, yesterday: null, location: null });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isUseMyLocation, coordinates?.latitude, coordinates?.longitude]);
+
   useEffect(() => {
     return () => {
       if (debounceTimerRef.current) {
@@ -192,30 +231,36 @@ export default function HomePage() {
     };
   }, []);
 
+  const isGeolocationActive = isUseMyLocation && coordinates;
+
   return (
     <div className="flex flex-col gap-6">
-      <Title level={2}>Добро пожаловать в W4Y Weather</Title>
-      <Paragraph>
-        Введите название города или адрес для поиска локации и просмотра погоды.
-      </Paragraph>
-
-      <div className="max-w-md">
-        <AutoComplete
-          style={{ width: '100%' }}
-          options={options}
-          onSearch={handleSearch}
-          onSelect={handleSelect}
-          placeholder="Введите город или адрес..."
-          value={searchValue}
-          notFoundContent={loading ? <Spin size="small" /> : null}
-          allowClear
-        />
-      </div>
+      {!isGeolocationActive && (
+        <div className="max-w-md">
+          <AutoComplete
+            style={{ width: '100%' }}
+            options={options}
+            onSearch={handleSearch}
+            onSelect={handleSelect}
+            placeholder="Введите город или адрес..."
+            value={searchValue}
+            notFoundContent={loading ? <Spin size="small" /> : null}
+            allowClear
+          />
+        </div>
+      )}
 
       {weatherLoading && (
         <div className="flex justify-center">
           <Spin size="large" />
         </div>
+      )}
+
+      {weatherData.location && (
+        <Text strong>
+          {weatherData.location.name}, {weatherData.location.region},{' '}
+          {weatherData.location.country}
+        </Text>
       )}
 
       {(weatherData.current || weatherData.yesterday) && !weatherLoading && (
