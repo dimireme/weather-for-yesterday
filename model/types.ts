@@ -36,3 +36,14 @@ export interface WeatherData {
   yesterday: HourForecast | null;
   location: LocationInfo | null;
 }
+
+export interface Coordinates {
+  latitude: number;
+  longitude: number;
+}
+
+export interface LocationOption {
+  value: string;
+  label: string;
+  coordinates: Coordinates;
+}
