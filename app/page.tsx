@@ -1,10 +1,12 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { AutoComplete, message, Spin } from 'antd';
+import { AutoComplete, message, Spin, Modal } from 'antd';
 import type { AutoCompleteProps } from 'antd';
+import Link from 'next/link';
 import { useSettings } from '@/components/SettingsContext';
 import WeatherDisplay from '@/components/WeatherDisplay';
+import { requestGeolocation } from '@/model/lib/requestGeolocation';
 
 interface LocationOption {
   value: string;
@@ -25,12 +27,15 @@ interface SelectedCoordinates {
 }
 
 export default function HomePage() {
-  const { isUseMyLocation, coordinates } = useSettings();
+  const { isUseMyLocation } = useSettings();
   const [options, setOptions] = useState<LocationOption[]>([]);
   const [loading, setLoading] = useState(false);
   const [searchValue, setSearchValue] = useState('');
   const [selectedCoordinates, setSelectedCoordinates] =
     useState<SelectedCoordinates | null>(null);
+  const [geolocationCoordinates, setGeolocationCoordinates] =
+    useState<SelectedCoordinates | null>(null);
+  const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   const searchLocations = async (query: string) => {
@@ -114,6 +119,86 @@ export default function HomePage() {
     }
   }, [isUseMyLocation]);
 
+  // Проверяем разрешение на геолокацию и запрашиваем координаты при включении флага
+  useEffect(() => {
+    if (!isUseMyLocation) {
+      setGeolocationCoordinates(null);
+      return;
+    }
+
+    let isMounted = true;
+
+    const checkAndRequestGeolocation = async () => {
+      const checkGeolocationPermission = async (): Promise<
+        'granted' | 'prompt' | 'denied'
+      > => {
+        if (!navigator.permissions) {
+          return 'prompt';
+        }
+
+        try {
+          const result = await navigator.permissions.query({
+            name: 'geolocation' as PermissionName,
+          });
+          return result.state as 'granted' | 'prompt' | 'denied';
+        } catch (error) {
+          return 'prompt';
+        }
+      };
+
+      const permission = await checkGeolocationPermission();
+
+      if (permission === 'granted') {
+        // Разрешение уже есть - сразу запрашиваем геолокацию
+        try {
+          const coords = await requestGeolocation();
+          if (isMounted) {
+            setGeolocationCoordinates(coords);
+            message.success('Геолокация успешно определена');
+          }
+        } catch (error) {
+          if (isMounted) {
+            const errorMessage =
+              error instanceof Error
+                ? error.message
+                : 'Не удалось получить геолокацию';
+            message.error(`Не удалось получить геолокацию: ${errorMessage}`);
+          }
+        }
+      } else {
+        // Разрешения нет или оно denied - показываем модальное окно
+        if (isMounted) {
+          setIsLocationModalOpen(true);
+        }
+      }
+    };
+
+    checkAndRequestGeolocation();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [isUseMyLocation, requestGeolocation]);
+
+  const handleLocationModalOk = async () => {
+    setIsLocationModalOpen(false);
+    try {
+      const coords = await requestGeolocation();
+      setGeolocationCoordinates(coords);
+      message.success('Геолокация успешно определена');
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : 'Не удалось получить геолокацию';
+      message.error(`Не удалось получить геолокацию: ${errorMessage}`);
+    }
+  };
+
+  const handleLocationModalCancel = () => {
+    setIsLocationModalOpen(false);
+  };
+
   useEffect(() => {
     return () => {
       if (debounceTimerRef.current) {
@@ -122,18 +207,18 @@ export default function HomePage() {
     };
   }, []);
 
-  const isGeolocationActive = isUseMyLocation && coordinates;
+  const isGeolocationActive = isUseMyLocation && geolocationCoordinates;
   // Используем координаты из геолокации, если она активна, иначе из выбранной локации
   const activeCoordinates = isGeolocationActive
-    ? coordinates
+    ? geolocationCoordinates
     : selectedCoordinates;
 
   return (
-    <div className="flex flex-col gap-6">
-      {!isGeolocationActive && (
-        <div className="max-w-md">
+    <>
+      <div className="flex flex-col gap-6">
+        {!isGeolocationActive && (
           <AutoComplete
-            style={{ width: '100%' }}
+            className="w-full"
             options={options}
             onSearch={handleSearch}
             onSelect={handleSelect}
@@ -142,10 +227,31 @@ export default function HomePage() {
             notFoundContent={loading ? <Spin size="small" /> : null}
             allowClear
           />
-        </div>
-      )}
+        )}
 
-      <WeatherDisplay coordinates={activeCoordinates} />
-    </div>
+        <WeatherDisplay coordinates={activeCoordinates} />
+      </div>
+
+      <Modal
+        title="Разрешение доступа к геолокации"
+        open={isLocationModalOpen}
+        onOk={handleLocationModalOk}
+        onCancel={handleLocationModalCancel}
+        okText="ОК"
+        cancelText="Отмена"
+      >
+        <p>
+          Вам нужно разрешить доступ к вашей геолокации. Разрешите это в
+          браузере.
+        </p>
+        <p>
+          Если нажмёте ОК, вы соглашаетесь с{' '}
+          <Link href="/privacy" onClick={() => setIsLocationModalOpen(false)}>
+            политикой конфиденциальности
+          </Link>
+          .
+        </p>
+      </Modal>
+    </>
   );
 }

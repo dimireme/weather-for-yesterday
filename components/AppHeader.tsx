@@ -1,9 +1,8 @@
 'use client';
 
-import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Button, Dropdown, Switch, Modal, message } from 'antd';
+import { Button, Dropdown, Switch } from 'antd';
 import type { MenuProps } from 'antd';
 import {
   TbMenu2,
@@ -31,65 +30,7 @@ export function AppHeader() {
     toggleTemperatureUnit,
     isUseMyLocation,
     toggleUseMyLocation,
-    requestGeolocation,
   } = useSettings();
-  const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
-
-  const checkGeolocationPermission = async (): Promise<
-    'granted' | 'prompt' | 'denied'
-  > => {
-    if (!navigator.permissions) {
-      // Permissions API не поддерживается, возвращаем 'prompt' чтобы показать модалку
-      return 'prompt';
-    }
-
-    try {
-      const result = await navigator.permissions.query({
-        name: 'geolocation' as PermissionName,
-      });
-      return result.state as 'granted' | 'prompt' | 'denied';
-    } catch (error) {
-      // Если не удалось проверить, возвращаем 'prompt'
-      return 'prompt';
-    }
-  };
-
-  const handleLocationToggle = async () => {
-    if (isUseMyLocation) {
-      // Если выключаем - просто выключаем
-      toggleUseMyLocation();
-    } else {
-      // Проверяем разрешение на геолокацию
-      const permission = await checkGeolocationPermission();
-
-      if (permission === 'granted') {
-        // Разрешение уже есть - сразу запрашиваем геолокацию без модалки
-        await handleLocationModalOk();
-      } else {
-        // Разрешения нет или оно denied - показываем модальное окно
-        setIsLocationModalOpen(true);
-      }
-    }
-  };
-
-  const handleLocationModalOk = async () => {
-    setIsLocationModalOpen(false);
-    try {
-      await requestGeolocation();
-      toggleUseMyLocation();
-      message.success('Геолокация успешно определена');
-    } catch (error) {
-      const errorMessage =
-        error instanceof Error
-          ? error.message
-          : 'Не удалось получить геолокацию';
-      message.error(`Не удалось получить геолокацию: ${errorMessage}`);
-    }
-  };
-
-  const handleLocationModalCancel = () => {
-    setIsLocationModalOpen(false);
-  };
 
   const menuItems: MenuProps['items'] = [
     {
@@ -145,7 +86,7 @@ export function AppHeader() {
       label: (
         <div
           className="flex items-center justify-between gap-4 w-full"
-          onClick={stopPropagationAnd(handleLocationToggle)}
+          onClick={stopPropagationAnd(toggleUseMyLocation)}
         >
           <span>Use my location</span>
           <Switch size="small" checked={isUseMyLocation} />
@@ -155,49 +96,26 @@ export function AppHeader() {
   ];
 
   return (
-    <>
-      <header className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
-        <Link
-          href="/"
-          className="text-xl font-semibold no-underline"
-          style={{ color: isDark ? '#fff' : '#1f2937' }}
-        >
-          Weather For Yesterday
-        </Link>
-
-        <Dropdown
-          menu={{ items: menuItems }}
-          trigger={['click']}
-          placement="bottomRight"
-        >
-          <Button
-            type="text"
-            icon={<TbMenu2 size={24} />}
-            aria-label="Открыть меню"
-          />
-        </Dropdown>
-      </header>
-
-      <Modal
-        title="Разрешение доступа к геолокации"
-        open={isLocationModalOpen}
-        onOk={handleLocationModalOk}
-        onCancel={handleLocationModalCancel}
-        okText="ОК"
-        cancelText="Отмена"
+    <header className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
+      <Link
+        href="/"
+        className="text-xl font-semibold no-underline"
+        style={{ color: isDark ? '#fff' : '#1f2937' }}
       >
-        <p>
-          Вам нужно разрешить доступ к вашей геолокации. Разрешите это в
-          браузере.
-        </p>
-        <p>
-          Если нажмёте ОК, вы соглашаетесь с{' '}
-          <Link href="/privacy" onClick={() => setIsLocationModalOpen(false)}>
-            политикой конфиденциальности
-          </Link>
-          .
-        </p>
-      </Modal>
-    </>
+        Weather For Yesterday
+      </Link>
+
+      <Dropdown
+        menu={{ items: menuItems }}
+        trigger={['click']}
+        placement="bottomRight"
+      >
+        <Button
+          type="text"
+          icon={<TbMenu2 size={24} />}
+          aria-label="Открыть меню"
+        />
+      </Dropdown>
+    </header>
   );
 }
