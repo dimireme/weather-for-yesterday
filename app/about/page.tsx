@@ -2,18 +2,16 @@
 
 import { Typography } from 'antd';
 
-const { Title, Paragraph } = Typography;
-
 export default function AboutPage() {
   return (
     <div>
-      <Title level={2}>О приложении</Title>
-      <Paragraph>
+      <Typography.Title level={2}>О приложении</Typography.Title>
+      <Typography.Paragraph>
         W4Y Weather — простое приложение для просмотра погоды.
-      </Paragraph>
-      <Paragraph>
+      </Typography.Paragraph>
+      <Typography.Paragraph>
         Позволяет узнать текущую погоду по адресу или геолокации.
-      </Paragraph>
+      </Typography.Paragraph>
     </div>
   );
 }

@@ -6,8 +6,6 @@ import { Coordinates } from '@/model/types';
 
 import { HourWeatherCard } from './HourWeatherCard';
 
-const { Text } = Typography;
-
 interface Props {
   coordinates?: Coordinates | null;
 }
@@ -34,10 +32,10 @@ export const WeatherDisplay: React.FC<Props> = ({ coordinates }) => {
   return (
     <>
       {weatherData.location && (
-        <Text strong>
+        <Typography.Text strong>
           {weatherData.location.name}, {weatherData.location.region},{' '}
           {weatherData.location.country}
-        </Text>
+        </Typography.Text>
       )}
 
       {(weatherData.current || weatherData.yesterday) && (
