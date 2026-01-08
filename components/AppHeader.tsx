@@ -13,6 +13,9 @@ import {
   TbTemperatureSnow,
   TbCurrentLocation,
 } from 'react-icons/tb';
+
+import { TemperatureUnit } from '@/model/types';
+
 import { useSettings } from './SettingsContext';
 
 // Предотвращает закрытие dropdown и вызывает callback
@@ -76,7 +79,10 @@ export function AppHeader() {
           onClick={stopPropagationAnd(toggleTemperatureUnit)}
         >
           <span>Use °F</span>
-          <Switch size="small" checked={temperatureUnit === 'fahrenheit'} />
+          <Switch
+            size="small"
+            checked={temperatureUnit === TemperatureUnit.F}
+          />
         </div>
       ),
     },

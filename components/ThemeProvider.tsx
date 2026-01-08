@@ -1,14 +1,11 @@
 'use client';
 
+import { PropsWithChildren } from 'react';
 import { ConfigProvider, theme } from 'antd';
-import { ReactNode } from 'react';
-import { SettingsProvider, useSettings } from './SettingsContext';
 
-interface ThemeProviderProps {
-  children: ReactNode;
-}
+import { useSettings } from './SettingsContext';
 
-function AntdThemeProvider({ children }: ThemeProviderProps) {
+export const ThemeProvider: React.FC<PropsWithChildren> = ({ children }) => {
   const { isDark } = useSettings();
 
   return (
@@ -23,12 +20,4 @@ function AntdThemeProvider({ children }: ThemeProviderProps) {
       {children}
     </ConfigProvider>
   );
-}
-
-export function ThemeProvider({ children }: ThemeProviderProps) {
-  return (
-    <SettingsProvider>
-      <AntdThemeProvider>{children}</AntdThemeProvider>
-    </SettingsProvider>
-  );
-}
+};

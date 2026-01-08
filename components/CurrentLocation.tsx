@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { Modal, Spin } from 'antd';
 import Link from 'next/link';
 
-import { Coordinates } from '@/model/types';
+import { Coordinates, GeolocationPermission } from '@/model/types';
 import { useCurrentLocation } from '@/hooks/useCurrentLocation';
 
 interface Props {
@@ -22,7 +22,10 @@ export const CurrentLocation: React.FC<Props> = ({ onSetCoordinates }) => {
     // 1. Проверка разрешения завершена (permissionState !== null)
     // 2. Разрешение не granted (prompt или denied)
     // 3. Пользователь включил использование геолокации
-    if (permissionState !== null && permissionState !== 'granted') {
+    if (
+      permissionState !== null &&
+      permissionState !== GeolocationPermission.Granted
+    ) {
       setIsModalOpen(true);
     } else {
       setIsModalOpen(false);

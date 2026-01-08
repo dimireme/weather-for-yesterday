@@ -5,10 +5,9 @@ import {
   useContext,
   useState,
   useEffect,
-  ReactNode,
+  PropsWithChildren,
 } from 'react';
-
-type TemperatureUnit = 'celsius' | 'fahrenheit';
+import { TemperatureUnit } from '@/model/types';
 
 interface SettingsContextType {
   isDark: boolean;
@@ -27,14 +26,9 @@ const THEME_KEY = 'w4y_theme';
 const UNIT_KEY = 'w4y_temperature_unit';
 const USE_MY_LOCATION_KEY = 'w4y_use_my_location';
 
-interface SettingsProviderProps {
-  children: ReactNode;
-}
-
-export function SettingsProvider({ children }: SettingsProviderProps) {
+export const SettingsProvider: React.FC<PropsWithChildren> = ({ children }) => {
   const [isDark, setIsDark] = useState(false);
-  const [temperatureUnit, setTemperatureUnit] =
-    useState<TemperatureUnit>('celsius');
+  const [temperatureUnit, setTemperatureUnit] = useState(TemperatureUnit.C);
   const [mounted, setMounted] = useState(false);
   const [isUseMyLocation, setIsUseMyLocation] = useState(false);
 
@@ -47,8 +41,8 @@ export function SettingsProvider({ children }: SettingsProviderProps) {
     if (savedTheme === 'dark') {
       setIsDark(true);
     }
-    if (savedUnit === 'fahrenheit') {
-      setTemperatureUnit('fahrenheit');
+    if (savedUnit === TemperatureUnit.F) {
+      setTemperatureUnit(TemperatureUnit.F);
     }
     if (savedUseMyLocation === 'true') {
       setIsUseMyLocation(true);
@@ -83,7 +77,7 @@ export function SettingsProvider({ children }: SettingsProviderProps) {
   const toggleTheme = () => setIsDark((prev) => !prev);
   const toggleTemperatureUnit = () =>
     setTemperatureUnit((prev) =>
-      prev === 'celsius' ? 'fahrenheit' : 'celsius'
+      prev === TemperatureUnit.C ? TemperatureUnit.F : TemperatureUnit.C
     );
   const toggleUseMyLocation = () => setIsUseMyLocation((prev) => !prev);
 
@@ -101,7 +95,7 @@ export function SettingsProvider({ children }: SettingsProviderProps) {
       {children}
     </SettingsContext.Provider>
   );
-}
+};
 
 export function useSettings() {
   const context = useContext(SettingsContext);

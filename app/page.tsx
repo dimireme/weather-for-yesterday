@@ -1,11 +1,12 @@
 'use client';
 
 import { useState } from 'react';
+
 import { useSettings } from '@/components/SettingsContext';
 import { WeatherDisplay } from '@/components/WeatherDisplay';
 import { SearchLocation } from '@/components/SearchLocation';
-import { Coordinates } from '@/model/types';
 import { CurrentLocation } from '@/components/CurrentLocation';
+import { Coordinates } from '@/model/types';
 
 export default function HomePage() {
   const { isUseMyLocation } = useSettings();

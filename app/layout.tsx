@@ -1,7 +1,10 @@
 import type { Metadata } from 'next';
 import { AntdRegistry } from '@ant-design/nextjs-registry';
+
 import { ThemeProvider } from '@/components/ThemeProvider';
+import { SettingsProvider } from '@/components/SettingsContext';
 import { AppHeader } from '@/components/AppHeader';
+
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -18,12 +21,14 @@ export default function RootLayout({
     <html lang="ru">
       <body>
         <AntdRegistry>
-          <ThemeProvider>
-            <div className="content-wrapper min-h-screen flex flex-col max-w-[1080px] mx-auto">
-              <AppHeader />
-              <main className="flex-1 p-4">{children}</main>
-            </div>
-          </ThemeProvider>
+          <SettingsProvider>
+            <ThemeProvider>
+              <div className="content-wrapper min-h-screen flex flex-col max-w-[1080px] mx-auto">
+                <AppHeader />
+                <main className="flex-1 p-4">{children}</main>
+              </div>
+            </ThemeProvider>
+          </SettingsProvider>
         </AntdRegistry>
       </body>
     </html>

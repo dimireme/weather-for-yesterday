@@ -47,3 +47,14 @@ export interface LocationOption {
   label: string;
   coordinates: Coordinates;
 }
+
+export enum TemperatureUnit {
+  C = 'celsius',
+  F = 'fahrenheit',
+}
+
+export enum GeolocationPermission {
+  Granted = 'granted',
+  Prompt = 'prompt',
+  Denied = 'denied',
+}

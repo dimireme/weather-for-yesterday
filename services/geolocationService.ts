@@ -1,3 +1,5 @@
+import { GeolocationPermission } from '@/model/types';
+
 export const requestGeolocation = (): Promise<GeolocationCoordinates> => {
   return new Promise((resolve, reject) => {
     navigator.geolocation.getCurrentPosition(
@@ -7,20 +9,19 @@ export const requestGeolocation = (): Promise<GeolocationCoordinates> => {
   });
 };
 
-export const checkGeolocationPermission = async (): Promise<
-  'granted' | 'prompt' | 'denied'
-> => {
-  if (!navigator.permissions) {
-    return 'prompt';
-  }
+export const checkGeolocationPermission =
+  async (): Promise<GeolocationPermission> => {
+    if (!navigator.permissions) {
+      return GeolocationPermission.Prompt;
+    }
 
-  try {
-    const result = await navigator.permissions.query({
-      name: 'geolocation' as PermissionName,
-    });
+    try {
+      const result = await navigator.permissions.query({
+        name: 'geolocation' as PermissionName,
+      });
 
-    return result.state as 'granted' | 'prompt' | 'denied';
-  } catch {
-    return 'prompt';
-  }
-};
+      return result.state as GeolocationPermission;
+    } catch {
+      return GeolocationPermission.Prompt;
+    }
+  };

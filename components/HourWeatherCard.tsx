@@ -1,5 +1,5 @@
 import { Card } from 'antd';
-import { HourForecast } from '@/model/types';
+import { HourForecast, TemperatureUnit } from '@/model/types';
 import { useSettings } from './SettingsContext';
 
 interface Props {
@@ -15,7 +15,7 @@ export const HourWeatherCard: React.FC<Props> = ({ weather, title }) => {
       <div className="flex flex-col gap-2">
         <div className="text-lg font-semibold">{weather.condition.text}</div>
         <div className="text-2xl">
-          {temperatureUnit === 'celsius'
+          {temperatureUnit === TemperatureUnit.C
             ? `${weather.feelslike_c}°C`
             : `${weather.feelslike_f}°F`}
         </div>

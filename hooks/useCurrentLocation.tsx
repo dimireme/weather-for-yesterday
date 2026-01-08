@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { message } from 'antd';
 
-import { Coordinates } from '@/model/types';
+import { Coordinates, GeolocationPermission } from '@/model/types';
 import {
   checkGeolocationPermission,
   requestGeolocation,
@@ -12,9 +12,8 @@ import {
 export const useCurrentLocation = (
   onSetCoordinates: (c: Coordinates) => void
 ) => {
-  const [permissionState, setPermissionState] = useState<
-    'granted' | 'prompt' | 'denied' | null
-  >(null);
+  const [permissionState, setPermissionState] =
+    useState<GeolocationPermission | null>(null);
 
   const [requesting, setRequesting] = useState(false);
 
@@ -28,7 +27,7 @@ export const useCurrentLocation = (
         setPermissionState(permission);
       }
 
-      if (permission === 'granted') {
+      if (permission === GeolocationPermission.Granted) {
         try {
           setRequesting(true);
           const coords = await requestGeolocation();
@@ -67,7 +66,7 @@ export const useCurrentLocation = (
 
       onSetCoordinates(coords);
 
-      setPermissionState('granted');
+      setPermissionState(GeolocationPermission.Granted);
     } catch (error) {
       const errorMessage =
         error instanceof Error
