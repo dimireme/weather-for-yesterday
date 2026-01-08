@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { message, Modal } from 'antd';
 import Link from 'next/link';
 import { useSettings } from '@/components/SettingsContext';
-import WeatherDisplay from '@/components/WeatherDisplay';
+import { WeatherDisplay } from '@/components/WeatherDisplay';
 import { SearchLocation } from '@/components/SearchLocation';
 import { Coordinates } from '@/model/types';
 

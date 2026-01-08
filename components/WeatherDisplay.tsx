@@ -1,31 +1,19 @@
 'use client';
 
-import { useEffect } from 'react';
-import { Typography, Spin, Card } from 'antd';
+import { Typography, Spin } from 'antd';
+import { useWeather } from '@/hooks/useWeather';
+import { Coordinates } from '@/model/types';
 
-import { useFetchWeather } from '@/hooks/useFetchWeather';
 import { HourWeatherCard } from './HourWeatherCard';
 
 const { Text } = Typography;
 
-interface Coordinates {
-  latitude: number;
-  longitude: number;
-}
-
-interface WeatherDisplayProps {
+interface Props {
   coordinates?: Coordinates | null;
 }
 
-export default function WeatherDisplay({ coordinates }: WeatherDisplayProps) {
-  const { fetchWeather, loading, error, weatherData } = useFetchWeather();
-
-  // Автоматическая загрузка погоды при изменении координат
-  useEffect(() => {
-    if (coordinates) {
-      fetchWeather(coordinates.latitude, coordinates.longitude);
-    }
-  }, [coordinates?.latitude, coordinates?.longitude, fetchWeather]);
+export const WeatherDisplay: React.FC<Props> = ({ coordinates }) => {
+  const { loading, error, weatherData } = useWeather(coordinates);
 
   if (!coordinates) {
     return null;
@@ -65,4 +53,4 @@ export default function WeatherDisplay({ coordinates }: WeatherDisplayProps) {
       )}
     </>
   );
-}
+};
