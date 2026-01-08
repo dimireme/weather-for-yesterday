@@ -11,7 +11,7 @@ interface Props {
 }
 
 export const WeatherDisplay: React.FC<Props> = ({ coordinates }) => {
-  const { loading, error, weatherData } = useWeather(coordinates);
+  const { loading, weatherData } = useWeather(coordinates);
 
   if (!coordinates) {
     return null;
@@ -23,10 +23,6 @@ export const WeatherDisplay: React.FC<Props> = ({ coordinates }) => {
         <Spin size="large" />
       </div>
     );
-  }
-
-  if (error) {
-    return <div className="text-red-500">{error}</div>;
   }
 
   return (

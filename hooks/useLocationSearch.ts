@@ -1,6 +1,8 @@
 import { useMemo, useState } from 'react';
 import debounce from 'lodash/debounce';
 
+import { message } from '@/utils/message';
+
 import { fetchLocations } from '@/services/geocodeService';
 import { LocationOption } from '@/model/types';
 
@@ -15,8 +17,11 @@ export const useLocationSearch = () => {
     try {
       const result = await fetchLocations(query);
       setOptions(result);
-    } catch {
+    } catch (error) {
       setOptions([]);
+      const errorMessage =
+        error instanceof Error ? error.message : 'Ошибка при поиске локации';
+      message.error(errorMessage);
     } finally {
       setLoading(false);
     }

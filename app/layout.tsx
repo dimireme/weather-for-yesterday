@@ -5,6 +5,7 @@ import { AntdRegistry } from '@ant-design/nextjs-registry';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import { SettingsProvider } from '@/components/SettingsContext';
 import { AppHeader } from '@/components/AppHeader';
+import { MessageProvider } from '@/components/MessageProvider';
 import { TemperatureUnit } from '@/model/types';
 
 import './globals.css';
@@ -20,7 +21,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const cookieStore = await cookies();
-  
+
   const themeCookie = cookieStore.get('w4y_theme');
   const unitCookie = cookieStore.get('w4y_temperature_unit');
   const locationCookie = cookieStore.get('w4y_use_my_location');
@@ -42,10 +43,12 @@ export default async function RootLayout({
             initialUseMyLocation={isUseMyLocation}
           >
             <ThemeProvider>
-              <div className="content-wrapper min-h-screen flex flex-col max-w-[1080px] mx-auto">
-                <AppHeader />
-                <main className="flex-1 p-4">{children}</main>
-              </div>
+              <MessageProvider>
+                <div className="content-wrapper min-h-screen flex flex-col max-w-[1080px] mx-auto">
+                  <AppHeader />
+                  <main className="flex-1 p-4">{children}</main>
+                </div>
+              </MessageProvider>
             </ThemeProvider>
           </SettingsProvider>
         </AntdRegistry>

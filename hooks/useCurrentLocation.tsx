@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { message } from 'antd';
+
+import { message } from '@/utils/message';
 
 import { Coordinates, GeolocationPermission } from '@/model/types';
 import {

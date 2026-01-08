@@ -1,5 +1,7 @@
 import { useCallback, useRef, useState } from 'react';
 
+import { message } from '@/utils/message';
+
 import { WeatherData } from '@/model/types';
 import {
   fetchWeatherByCoordinates,
@@ -8,7 +10,6 @@ import {
 
 export const useFetchWeather = () => {
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [weatherData, setWeatherData] =
     useState<WeatherData>(EMPTY_WEATHER_DATA);
 
@@ -22,7 +23,6 @@ export const useFetchWeather = () => {
       abortControllerRef.current = abortController;
 
       setLoading(true);
-      setError(null);
 
       try {
         const data = await fetchWeatherByCoordinates({
@@ -39,11 +39,12 @@ export const useFetchWeather = () => {
           return;
         }
 
-        setError(
+        const errorMessage =
           err instanceof Error
             ? err.message
-            : 'Ошибка при получении данных о погоде'
-        );
+            : 'Ошибка при получении данных о погоде';
+
+        message.error(errorMessage);
         setWeatherData(EMPTY_WEATHER_DATA);
       } finally {
         if (abortControllerRef.current === abortController) {
@@ -55,5 +56,5 @@ export const useFetchWeather = () => {
     []
   );
 
-  return { fetchWeather, loading, error, weatherData };
+  return { fetchWeather, loading, weatherData };
 };

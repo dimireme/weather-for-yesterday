@@ -19,7 +19,8 @@ export const fetchLocations = async (
   const response = await fetch(`/api/geocode?q=${encodeURIComponent(query)}`);
 
   if (!response.ok) {
-    return [];
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(errorData?.error || 'Ошибка при поиске локации');
   }
 
   const data = await response.json();
