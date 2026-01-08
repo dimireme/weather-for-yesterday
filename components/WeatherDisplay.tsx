@@ -42,12 +42,18 @@ export const WeatherDisplay: React.FC<Props> = ({ coordinates }) => {
 
       {(weatherData.current || weatherData.yesterday) && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl">
-          {weatherData.current && (
-            <HourWeatherCard weather={weatherData.current} />
+          {weatherData.yesterday && (
+            <HourWeatherCard
+              weather={weatherData.yesterday}
+              title="Вчерашний час"
+            />
           )}
 
-          {weatherData.yesterday && (
-            <HourWeatherCard weather={weatherData.yesterday} />
+          {weatherData.current && (
+            <HourWeatherCard
+              weather={weatherData.current}
+              title="Текущий час"
+            />
           )}
         </div>
       )}
