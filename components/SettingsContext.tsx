@@ -8,6 +8,7 @@ import {
   PropsWithChildren,
 } from 'react';
 import { TemperatureUnit } from '@/model/types';
+import { getCookie, setCookie } from '@/utils/cookies';
 
 interface SettingsContextType {
   isDark: boolean;
@@ -26,17 +27,30 @@ const THEME_KEY = 'w4y_theme';
 const UNIT_KEY = 'w4y_temperature_unit';
 const USE_MY_LOCATION_KEY = 'w4y_use_my_location';
 
-export const SettingsProvider: React.FC<PropsWithChildren> = ({ children }) => {
-  const [isDark, setIsDark] = useState(false);
-  const [temperatureUnit, setTemperatureUnit] = useState(TemperatureUnit.C);
-  const [mounted, setMounted] = useState(false);
-  const [isUseMyLocation, setIsUseMyLocation] = useState(false);
+interface SettingsProviderProps extends PropsWithChildren {
+  initialTheme?: boolean;
+  initialTemperatureUnit?: TemperatureUnit;
+  initialUseMyLocation?: boolean;
+}
 
-  // Загрузка настроек из localStorage при монтировании
+export const SettingsProvider: React.FC<SettingsProviderProps> = ({
+  children,
+  initialTheme = false,
+  initialTemperatureUnit = TemperatureUnit.C,
+  initialUseMyLocation = false,
+}) => {
+  const [isDark, setIsDark] = useState(initialTheme);
+  const [temperatureUnit, setTemperatureUnit] = useState(
+    initialTemperatureUnit
+  );
+  const [isUseMyLocation, setIsUseMyLocation] = useState(initialUseMyLocation);
+  const [mounted, setMounted] = useState(false);
+
+  // Загрузка настроек из cookies при монтировании (fallback для клиента)
   useEffect(() => {
-    const savedTheme = localStorage.getItem(THEME_KEY);
-    const savedUnit = localStorage.getItem(UNIT_KEY) as TemperatureUnit | null;
-    const savedUseMyLocation = localStorage.getItem(USE_MY_LOCATION_KEY);
+    const savedTheme = getCookie(THEME_KEY);
+    const savedUnit = getCookie(UNIT_KEY) as TemperatureUnit | null;
+    const savedUseMyLocation = getCookie(USE_MY_LOCATION_KEY);
 
     if (savedTheme === 'dark') {
       setIsDark(true);
@@ -50,27 +64,25 @@ export const SettingsProvider: React.FC<PropsWithChildren> = ({ children }) => {
     setMounted(true);
   }, []);
 
-  // Сохранение темы и установка класса на body
+  // Сохранение темы в cookies и установка класса на html
   useEffect(() => {
     if (mounted) {
-      localStorage.setItem(THEME_KEY, isDark ? 'dark' : 'light');
-      document.body.classList.toggle('dark', isDark);
+      setCookie(THEME_KEY, isDark ? 'dark' : 'light');
+      document.documentElement.classList.toggle('dark', isDark);
     }
   }, [isDark, mounted]);
 
-  // Сохранение единиц измерения
+  // Сохранение единиц измерения в cookies
   useEffect(() => {
     if (mounted) {
-      localStorage.setItem(UNIT_KEY, temperatureUnit);
+      setCookie(UNIT_KEY, temperatureUnit);
     }
   }, [temperatureUnit, mounted]);
 
+  // Сохранение настройки геолокации в cookies
   useEffect(() => {
     if (mounted) {
-      localStorage.setItem(
-        USE_MY_LOCATION_KEY,
-        isUseMyLocation ? 'true' : 'false'
-      );
+      setCookie(USE_MY_LOCATION_KEY, isUseMyLocation ? 'true' : 'false');
     }
   }, [isUseMyLocation, mounted]);
 

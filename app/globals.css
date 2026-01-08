@@ -17,7 +17,7 @@ body {
 }
 
 /* Фон за пределами контента - тёмная тема */
-body.dark {
+html.dark body {
   background-color: #141414;
 }
 
@@ -28,7 +28,7 @@ body.dark {
 }
 
 /* Контентная область - тёмная тема */
-body.dark .content-wrapper {
+html.dark .content-wrapper {
   background-color: #1f1f1f;
 }
 
