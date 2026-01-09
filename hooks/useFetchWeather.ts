@@ -40,9 +40,7 @@ export const useFetchWeather = () => {
         }
 
         const errorMessage =
-          err instanceof Error
-            ? err.message
-            : 'Ошибка при получении данных о погоде';
+          err instanceof Error ? err.message : 'Error fetching weather data';
 
         message.error(errorMessage);
         setWeatherData(EMPTY_WEATHER_DATA);

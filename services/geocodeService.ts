@@ -20,7 +20,7 @@ export const fetchLocations = async (
 
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}));
-    throw new Error(errorData?.error || 'Ошибка при поиске локации');
+    throw new Error(errorData?.error || 'Error searching location');
   }
 
   const data = await response.json();

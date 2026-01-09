@@ -1,7 +1,16 @@
 import { MetadataRoute } from 'next';
+import { headers } from 'next/headers';
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://yourdomain.com';
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  // Пытаемся получить домен из переменной окружения или из заголовков запроса
+  let baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+
+  if (!baseUrl) {
+    const headersList = await headers();
+    const host = headersList.get('host');
+    const protocol = headersList.get('x-forwarded-proto') || 'https';
+    baseUrl = `${protocol}://${host}`;
+  }
 
   return [
     {
@@ -24,4 +33,3 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ];
 }
-

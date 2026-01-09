@@ -42,9 +42,9 @@ export const useCurrentLocation = (
           const errorMessage =
             error instanceof Error
               ? error.message
-              : 'Не удалось получить геолокацию';
+              : 'Failed to get geolocation';
 
-          message.error(`Не удалось получить геолокацию: ${errorMessage}`);
+          message.error(`Failed to get geolocation: ${errorMessage}`);
         } finally {
           if (isMounted) {
             setRequesting(false);
@@ -70,11 +70,9 @@ export const useCurrentLocation = (
       setPermissionState(GeolocationPermission.Granted);
     } catch (error) {
       const errorMessage =
-        error instanceof Error
-          ? error.message
-          : 'Не удалось получить геолокацию';
+        error instanceof Error ? error.message : 'Failed to get geolocation';
 
-      message.error(`Не удалось получить геолокацию: ${errorMessage}`);
+      message.error(`Failed to get geolocation: ${errorMessage}`);
     } finally {
       setRequesting(false);
     }

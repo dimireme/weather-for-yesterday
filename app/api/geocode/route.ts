@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
 
   if (!query || query.trim().length === 0) {
     return NextResponse.json(
-      { error: 'Параметр q обязателен' },
+      { error: 'Parameter q is required' },
       { status: 400 }
     );
   }
@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
 
   if (!apiKey) {
     return NextResponse.json(
-      { error: 'API ключ не настроен' },
+      { error: 'API key is not configured' },
       { status: 500 }
     );
   }
@@ -47,7 +47,7 @@ export async function GET(request: NextRequest) {
     if (!response.ok) {
       const errorText = await response.text();
       return NextResponse.json(
-        { error: `Ошибка API: ${response.status}`, details: errorText },
+        { error: `API error: ${response.status}`, details: errorText },
         { status: response.status }
       );
     }
@@ -56,9 +56,9 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({ locations: data });
   } catch (error) {
-    console.error('Ошибка при запросе к weatherapi.com:', error);
+    console.error('Error requesting weatherapi.com:', error);
     return NextResponse.json(
-      { error: 'Ошибка при поиске локации' },
+      { error: 'Error searching for location' },
       { status: 500 }
     );
   }

@@ -7,7 +7,7 @@ export default function AboutPage() {
     <div>
       <Typography.Title level={2}>О приложении</Typography.Title>
       <Typography.Paragraph>
-        W4Y Weather — простое приложение для просмотра погоды.
+        Weather For Yesterday — простое приложение для просмотра погоды.
       </Typography.Paragraph>
       <Typography.Paragraph>
         Позволяет узнать текущую погоду по адресу или геолокации.

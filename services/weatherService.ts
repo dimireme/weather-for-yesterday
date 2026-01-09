@@ -34,14 +34,14 @@ export const fetchWeatherByCoordinates = async ({
 
   if (!response.ok) {
     const errorData = await response.json();
-    throw new Error(errorData?.error || 'Ошибка при получении данных о погоде');
+    throw new Error(errorData?.error || 'Error fetching weather data');
   }
 
   const data: WeatherApiHistoryResponse = await response.json();
 
   const forecast = data.forecast?.forecastday;
   if (!forecast?.length) {
-    throw new Error('Не удалось получить данные о погоде');
+    throw new Error('Error fetching weather data');
   }
 
   const firstDay = forecast[0];

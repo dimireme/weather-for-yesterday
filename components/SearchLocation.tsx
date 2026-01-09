@@ -16,7 +16,7 @@ export const SearchLocation: React.FC<Props> = ({ onSetCoordinates }) => {
       options={options}
       onSearch={handleSearch}
       onSelect={(_, option) => onSetCoordinates(option.coordinates)}
-      placeholder="Введите город или адрес..."
+      placeholder="Enter city or address..."
       value={value}
       notFoundContent={loading ? <Spin size="small" /> : null}
       allowClear

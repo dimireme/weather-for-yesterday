@@ -41,14 +41,14 @@ export async function GET(request: NextRequest) {
 
   if (!q) {
     return NextResponse.json(
-      { error: 'Параметр q обязателен' },
+      { error: 'Parameter q is required' },
       { status: 400 }
     );
   }
 
   if (!unixdt || !unixend_dt || !hour) {
     return NextResponse.json(
-      { error: 'Параметры unixdt, unixend_dt и hour обязательны' },
+      { error: 'Parameters unixdt, unixend_dt and hour are required' },
       { status: 400 }
     );
   }
@@ -57,7 +57,7 @@ export async function GET(request: NextRequest) {
 
   if (!apiKey) {
     return NextResponse.json(
-      { error: 'API ключ не настроен' },
+      { error: 'API key is not configured' },
       { status: 500 }
     );
   }
@@ -78,7 +78,7 @@ export async function GET(request: NextRequest) {
     if (!response.ok) {
       const errorText = await response.text();
       return NextResponse.json(
-        { error: `Ошибка API: ${response.status}`, details: errorText },
+        { error: `API error: ${response.status}`, details: errorText },
         { status: response.status }
       );
     }
@@ -87,9 +87,9 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(data);
   } catch (error) {
-    console.error('Ошибка при запросе к weatherapi.com:', error);
+    console.error('Error requesting weatherapi.com:', error);
     return NextResponse.json(
-      { error: 'Ошибка при получении данных о погоде' },
+      { error: 'Error fetching weather data' },
       { status: 500 }
     );
   }

@@ -11,7 +11,7 @@ import { TemperatureUnit } from '@/model/types';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'W4Y Weather',
+  title: 'Weather For Yesterday',
   description: 'Приложение для просмотра погоды',
 };
 

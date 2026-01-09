@@ -20,7 +20,7 @@ export const useLocationSearch = () => {
     } catch (error) {
       setOptions([]);
       const errorMessage =
-        error instanceof Error ? error.message : 'Ошибка при поиске локации';
+        error instanceof Error ? error.message : 'Error searching location';
       message.error(errorMessage);
     } finally {
       setLoading(false);

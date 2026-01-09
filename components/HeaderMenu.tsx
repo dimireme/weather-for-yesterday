@@ -103,11 +103,7 @@ export const HeaderMenu = () => {
       trigger={['click']}
       placement="bottomRight"
     >
-      <Button
-        type="text"
-        icon={<TbMenu2 size={24} />}
-        aria-label="Открыть меню"
-      />
+      <Button type="text" icon={<TbMenu2 size={24} />} aria-label="Open menu" />
     </Dropdown>
   );
 };

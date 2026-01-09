@@ -47,20 +47,21 @@ export const CurrentLocation: React.FC<Props> = ({ onSetCoordinates }) => {
 
   return (
     <Modal
-      title="Разрешение доступа к геолокации"
+      title="Geolocation Access Permission"
       open={isModalOpen}
       onOk={handleOk}
       onCancel={handleCancel}
-      okText="ОК"
-      cancelText="Отмена"
+      okText="OK"
+      cancelText="Cancel"
     >
       <p>
-        Вам нужно разрешить доступ к вашей геолокации. Разрешите это в браузере.
+        You need to allow access to your geolocation. Please enable this in your
+        browser.
       </p>
       <p>
-        Если нажмёте ОК, вы соглашаетесь с{' '}
+        By clicking OK, you agree to the{' '}
         <Link href="/privacy" onClick={() => setIsModalOpen(false)}>
-          политикой конфиденциальности
+          privacy policy
         </Link>
         .
       </p>

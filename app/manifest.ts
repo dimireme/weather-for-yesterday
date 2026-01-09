@@ -2,9 +2,9 @@ import { MetadataRoute } from 'next';
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'W4Y Weather',
+    name: 'Weather For Yesterday',
     short_name: 'W4Y',
-    description: 'Приложение для просмотра погоды',
+    description: 'Weather viewing application',
     start_url: '/',
     display: 'standalone',
     background_color: '#ffffff',
