@@ -2,6 +2,24 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Цветовая схема - светлая тема */
+:root {
+  --color-bg-body: #e8e8e8;
+  --color-bg-content: #ffffff;
+  --color-text-primary: #1f2937;
+  --color-text-inverse: #ffffff;
+  --color-border: #e5e7eb;
+}
+
+/* Цветовая схема - тёмная тема */
+html.dark {
+  --color-bg-body: #141414;
+  --color-bg-content: #1f1f1f;
+  --color-text-primary: #ffffff;
+  --color-text-inverse: #1f2937;
+  --color-border: #374151;
+}
+
 /* Базовые стили для html и body */
 html,
 body {
@@ -10,25 +28,15 @@ body {
   padding: 0;
 }
 
-/* Фон за пределами контента - светлая тема */
+/* Фон за пределами контента */
 body {
-  background-color: #e8e8e8;
+  background-color: var(--color-bg-body);
   transition: background-color 0.3s ease;
 }
 
-/* Фон за пределами контента - тёмная тема */
-html.dark body {
-  background-color: #141414;
-}
-
-/* Контентная область - светлая тема */
+/* Контентная область */
 .content-wrapper {
-  background-color: #ffffff;
+  background-color: var(--color-bg-content);
   transition: background-color 0.3s ease;
-}
-
-/* Контентная область - тёмная тема */
-html.dark .content-wrapper {
-  background-color: #1f1f1f;
 }
 

@@ -12,9 +12,6 @@ export const ThemeProvider: React.FC<PropsWithChildren> = ({ children }) => {
     <ConfigProvider
       theme={{
         algorithm: isDark ? theme.darkAlgorithm : theme.defaultAlgorithm,
-        token: {
-          colorPrimary: '#1677ff',
-        },
       }}
     >
       {children}
