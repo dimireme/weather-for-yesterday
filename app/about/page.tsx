@@ -76,9 +76,8 @@ export default function AboutPage() {
       </Typography.Paragraph>
 
       <Typography.Paragraph>
-        {/* TODO: Add GitHub repository link */}
         <a
-          href="#"
+          href="https://github.com/dimireme/weather-for-yesterday"
           target="_blank"
           rel="noopener noreferrer"
           className="text-blue-500 hover:text-blue-700 underline"
