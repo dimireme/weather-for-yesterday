@@ -12,6 +12,7 @@ interface Props {
 
 export const WeatherDisplay: React.FC<Props> = ({ coordinates }) => {
   const { loading, weatherData } = useWeather(coordinates);
+  const { current, yesterday, location } = weatherData;
 
   if (!coordinates) {
     return null;
@@ -27,25 +28,19 @@ export const WeatherDisplay: React.FC<Props> = ({ coordinates }) => {
 
   return (
     <>
-      {weatherData.location && (
+      {location && (
         <Typography.Text strong>
-          {weatherData.location.name}, {weatherData.location.region},{' '}
-          {weatherData.location.country}
+          {location.name}, {location.region}, {location.country}
         </Typography.Text>
       )}
 
-      {(weatherData.current || weatherData.yesterday) && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl">
-          {weatherData.yesterday && (
-            <HourWeatherCard
-              weather={weatherData.yesterday}
-              title="Yesterday"
-            />
+      {(current || yesterday) && (
+        <div className="grid grid-cols-2 gap-4 w-full">
+          {yesterday && (
+            <HourWeatherCard weather={yesterday} title="Yesterday" />
           )}
 
-          {weatherData.current && (
-            <HourWeatherCard weather={weatherData.current} title="Today" />
-          )}
+          {current && <HourWeatherCard weather={current} title="Today" />}
         </div>
       )}
     </>

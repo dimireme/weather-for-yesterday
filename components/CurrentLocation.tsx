@@ -6,6 +6,7 @@ import Link from 'next/link';
 
 import { Coordinates, GeolocationPermission } from '@/model/types';
 import { useCurrentLocation } from '@/hooks/useCurrentLocation';
+import { useSettings } from './SettingsContext';
 
 interface Props {
   onSetCoordinates: (coordinates: Coordinates) => void;
@@ -14,6 +15,7 @@ interface Props {
 export const CurrentLocation: React.FC<Props> = ({ onSetCoordinates }) => {
   const { permissionState, requesting, requestWithPrompt } =
     useCurrentLocation(onSetCoordinates);
+  const { toggleUseMyLocation } = useSettings();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -39,6 +41,7 @@ export const CurrentLocation: React.FC<Props> = ({ onSetCoordinates }) => {
 
   const handleCancel = () => {
     setIsModalOpen(false);
+    toggleUseMyLocation();
   };
 
   if (requesting) {
@@ -55,11 +58,8 @@ export const CurrentLocation: React.FC<Props> = ({ onSetCoordinates }) => {
       cancelText="Cancel"
     >
       <p>
-        You need to allow access to your geolocation. Please enable this in your
-        browser.
-      </p>
-      <p>
-        By clicking OK, you agree to the{' '}
+        By clicking OK, you consent to the use of your geolocation for the
+        purpose of displaying weather information, in accordance with the{' '}
         <Link href="/privacy" onClick={() => setIsModalOpen(false)}>
           privacy policy
         </Link>
