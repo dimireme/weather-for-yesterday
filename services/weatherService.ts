@@ -1,4 +1,5 @@
-import { WeatherApiHistoryResponse, WeatherData } from '@/model/types';
+import dayjs, { type Dayjs } from 'dayjs';
+import { WeatherData } from '@/model/types';
 
 export const EMPTY_WEATHER_DATA: WeatherData = {
   current: null,
@@ -9,7 +10,7 @@ export const EMPTY_WEATHER_DATA: WeatherData = {
 export interface FetchWeatherParams {
   latitude: number;
   longitude: number;
-  signal?: AbortSignal;
+  signal: AbortSignal;
 }
 
 export const fetchWeatherByCoordinates = async ({
@@ -17,39 +18,48 @@ export const fetchWeatherByCoordinates = async ({
   longitude,
   signal,
 }: FetchWeatherParams): Promise<WeatherData> => {
-  const today = Math.floor(Date.now() / 1000);
-  const yesterday = today - 24 * 60 * 60;
-  const currentHour = new Date().getHours();
-
-  const params = new URLSearchParams({
-    q: `${latitude},${longitude}`,
-    unixdt: yesterday.toString(),
-    unixend_dt: today.toString(),
-    hour: currentHour.toString(),
-  });
-
-  const response = await fetch(`/api/weather?${params.toString()}`, {
+  const fetchForecast = createForecastFetcher(
+    `${latitude},${longitude}`,
     signal,
-  });
+  );
 
-  if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData?.error || 'Error fetching weather data');
-  }
+  const today = dayjs().startOf('hour').add(1, 'hour');
+  const yesterday = today.subtract(1, 'day');
 
-  const data: WeatherApiHistoryResponse = await response.json();
+  const [todayData, yesterdayData] = await Promise.all([
+    fetchForecast(today),
+    fetchForecast(yesterday),
+  ]);
 
-  const forecast = data.forecast?.forecastday;
-  if (!forecast?.length) {
-    throw new Error('Error fetching weather data');
-  }
+  const todayHour = todayData.forecast?.forecastday?.[0]?.hour?.[0] ?? null;
 
-  const firstDay = forecast[0];
-  const lastDay = forecast[forecast.length - 1];
+  const yesterdayHour =
+    yesterdayData.forecast?.forecastday?.[0]?.hour?.[0] ?? null;
 
   return {
-    location: data.location ?? null,
-    current: lastDay.hour?.[0] ?? null,
-    yesterday: firstDay.hour?.[0] ?? null,
+    location: todayData.location ?? yesterdayData.location ?? null,
+    current: todayHour,
+    yesterday: yesterdayHour,
   };
 };
+
+function createForecastFetcher(location: string, signal: AbortSignal) {
+  return async (date: Dayjs) => {
+    const params = new URLSearchParams({
+      q: location,
+      dt: date.format('YYYY-MM-DD'),
+      hour: date.hour().toString(),
+    });
+
+    const response = await fetch(`/api/weather?${params.toString()}`, {
+      signal,
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData?.error || 'Error fetching weather data');
+    }
+
+    return response.json();
+  };
+}
