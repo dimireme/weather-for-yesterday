@@ -27,9 +27,17 @@ const privacyText = {
     thirdPartyTitle: '2. Third-Party Services',
     thirdPartyText: (
       <>
-        Weather data is obtained using the OpenWeather service. As part of the
-        request, only location coordinates are transmitted. No information that
-        allows identification of the user is transferred.
+        Weather data is obtained using the{' '}
+        <a
+          href="https://weatherapi.com"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          weatherapi.com
+        </a>{' '}
+        service. As part of the request, only location coordinates are
+        transmitted. No information that allows identification of the user is
+        transferred.
       </>
     ),
     cookiesTitle: '3. Cookies',
@@ -75,8 +83,15 @@ const privacyText = {
     thirdPartyTitle: '2. Сторонние сервисы',
     thirdPartyText: (
       <>
-        Для получения данных о погоде используется сторонний сервис OpenWeather.
-        В рамках запроса передаются только координаты местоположения, без
+        Для получения данных о погоде используется сторонний сервис{' '}
+        <a
+          href="https://weatherapi.com"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          weatherapi.com
+        </a>
+        . В рамках запроса передаются только координаты местоположения, без
         передачи информации, позволяющей идентифицировать пользователя.
       </>
     ),

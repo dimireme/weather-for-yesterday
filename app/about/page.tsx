@@ -72,10 +72,7 @@ export default function AboutPage() {
       <Typography.Title level={3}>Source Code</Typography.Title>
 
       <Typography.Paragraph>
-        Open source project. Source code is available on GitHub:
-      </Typography.Paragraph>
-
-      <Typography.Paragraph>
+        Open source project. Source code is available on{' '}
         <a
           href="https://github.com/dimireme/weather-for-yesterday"
           target="_blank"
