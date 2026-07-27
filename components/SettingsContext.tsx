@@ -35,7 +35,7 @@ interface SettingsProviderProps extends PropsWithChildren {
 
 export const SettingsProvider: React.FC<SettingsProviderProps> = ({
   children,
-  initialTheme = false,
+  initialTheme = true,
   initialTemperatureUnit = TemperatureUnit.C,
   initialUseMyLocation = false,
 }) => {
@@ -52,7 +52,9 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
     const savedUnit = getCookie(UNIT_KEY) as TemperatureUnit | null;
     const savedUseMyLocation = getCookie(USE_MY_LOCATION_KEY);
 
-    if (savedTheme === 'dark') {
+    if (savedTheme === 'light') {
+      setIsDark(false);
+    } else if (savedTheme === 'dark') {
       setIsDark(true);
     }
     if (savedUnit === TemperatureUnit.F) {

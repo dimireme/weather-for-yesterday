@@ -26,7 +26,7 @@ export default async function RootLayout({
   const unitCookie = cookieStore.get('w4y_temperature_unit');
   const locationCookie = cookieStore.get('w4y_use_my_location');
 
-  const isDark = themeCookie?.value === 'dark';
+  const isDark = themeCookie?.value !== 'light';
   const temperatureUnit =
     unitCookie?.value === TemperatureUnit.F
       ? TemperatureUnit.F
