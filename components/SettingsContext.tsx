@@ -17,6 +17,7 @@ interface SettingsContextType {
   toggleTemperatureUnit: () => void;
   isUseMyLocation: boolean;
   toggleUseMyLocation: () => void;
+  setUseMyLocation: (enabled: boolean) => void;
 }
 
 const SettingsContext = createContext<SettingsContextType | undefined>(
@@ -37,7 +38,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
   children,
   initialTheme = true,
   initialTemperatureUnit = TemperatureUnit.C,
-  initialUseMyLocation = false,
+  initialUseMyLocation = true,
 }) => {
   const [isDark, setIsDark] = useState(initialTheme);
   const [temperatureUnit, setTemperatureUnit] = useState(
@@ -60,7 +61,9 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
     if (savedUnit === TemperatureUnit.F) {
       setTemperatureUnit(TemperatureUnit.F);
     }
-    if (savedUseMyLocation === 'true') {
+    if (savedUseMyLocation === 'false') {
+      setIsUseMyLocation(false);
+    } else if (savedUseMyLocation === 'true') {
       setIsUseMyLocation(true);
     }
     setMounted(true);
@@ -104,6 +107,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         toggleTemperatureUnit,
         isUseMyLocation,
         toggleUseMyLocation,
+        setUseMyLocation: setIsUseMyLocation,
       }}
     >
       {children}

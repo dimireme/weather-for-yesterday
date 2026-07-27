@@ -31,7 +31,7 @@ export default async function RootLayout({
     unitCookie?.value === TemperatureUnit.F
       ? TemperatureUnit.F
       : TemperatureUnit.C;
-  const isUseMyLocation = locationCookie?.value === 'true';
+  const isUseMyLocation = locationCookie?.value !== 'false';
 
   return (
     <html lang="ru" className={isDark ? 'dark' : ''}>

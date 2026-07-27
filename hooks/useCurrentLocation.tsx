@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { message } from '@/utils/message';
 
@@ -11,12 +11,15 @@ import {
 } from '@/services/geolocationService';
 
 export const useCurrentLocation = (
-  onSetCoordinates: (c: Coordinates) => void
+  onSetCoordinates: (c: Coordinates) => void,
+  onDenied?: () => void
 ) => {
   const [permissionState, setPermissionState] =
     useState<GeolocationPermission | null>(null);
 
   const [requesting, setRequesting] = useState(false);
+  const onDeniedRef = useRef(onDenied);
+  onDeniedRef.current = onDenied;
 
   useEffect(() => {
     let isMounted = true;
@@ -45,6 +48,7 @@ export const useCurrentLocation = (
               : 'Failed to get geolocation';
 
           message.error(`Failed to get geolocation: ${errorMessage}`);
+          onDeniedRef.current?.();
         } finally {
           if (isMounted) {
             setRequesting(false);
@@ -73,6 +77,7 @@ export const useCurrentLocation = (
         error instanceof Error ? error.message : 'Failed to get geolocation';
 
       message.error(`Failed to get geolocation: ${errorMessage}`);
+      onDeniedRef.current?.();
     } finally {
       setRequesting(false);
     }

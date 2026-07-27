@@ -13,26 +13,25 @@ interface Props {
 }
 
 export const CurrentLocation: React.FC<Props> = ({ onSetCoordinates }) => {
+  const { setUseMyLocation } = useSettings();
   const { permissionState, requesting, requestWithPrompt } =
-    useCurrentLocation(onSetCoordinates);
-  const { toggleUseMyLocation } = useSettings();
+    useCurrentLocation(onSetCoordinates, () => setUseMyLocation(false));
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
-    // Модалка показывается только если:
-    // 1. Проверка разрешения завершена (permissionState !== null)
-    // 2. Разрешение не granted (prompt или denied)
-    // 3. Пользователь включил использование геолокации
-    if (
-      permissionState !== null &&
-      permissionState !== GeolocationPermission.Granted
-    ) {
+    // Модалка только при prompt — при denied сразу уходим на поиск
+    if (permissionState === GeolocationPermission.Denied) {
+      setUseMyLocation(false);
+      return;
+    }
+
+    if (permissionState === GeolocationPermission.Prompt) {
       setIsModalOpen(true);
     } else {
       setIsModalOpen(false);
     }
-  }, [permissionState]);
+  }, [permissionState, setUseMyLocation]);
 
   const handleOk = async () => {
     setIsModalOpen(false);
@@ -41,7 +40,7 @@ export const CurrentLocation: React.FC<Props> = ({ onSetCoordinates }) => {
 
   const handleCancel = () => {
     setIsModalOpen(false);
-    toggleUseMyLocation();
+    setUseMyLocation(false);
   };
 
   if (requesting) {
