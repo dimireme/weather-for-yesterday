@@ -5,14 +5,28 @@ import { AntdRegistry } from '@ant-design/nextjs-registry';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import { SettingsProvider } from '@/components/SettingsContext';
 import { AppHeader } from '@/components/AppHeader';
+import { SiteFooter } from '@/components/SiteFooter';
 import { MessageProvider } from '@/components/MessageProvider';
+import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from '@/config/site';
 import { TemperatureUnit } from '@/model/types';
 
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Weather For Yesterday',
-  description: 'Приложение для просмотра погоды',
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: SITE_NAME,
+    template: `%s | ${SITE_NAME}`,
+  },
+  description: SITE_DESCRIPTION,
+  applicationName: SITE_NAME,
+  openGraph: {
+    type: 'website',
+    siteName: SITE_NAME,
+    title: SITE_NAME,
+    description: SITE_DESCRIPTION,
+    locale: 'en_US',
+  },
 };
 
 export default async function RootLayout({
@@ -34,7 +48,7 @@ export default async function RootLayout({
   const isUseMyLocation = locationCookie?.value !== 'false';
 
   return (
-    <html lang="ru" className={isDark ? 'dark' : ''}>
+    <html lang="en" className={isDark ? 'dark' : ''}>
       <body>
         <AntdRegistry>
           <SettingsProvider
@@ -47,6 +61,7 @@ export default async function RootLayout({
                 <div className="content-wrapper min-h-screen flex flex-col max-w-[1080px] mx-auto">
                   <AppHeader />
                   <main className="flex-1 p-4">{children}</main>
+                  <SiteFooter />
                 </div>
               </MessageProvider>
             </ThemeProvider>

@@ -1,35 +1,23 @@
-import { MetadataRoute } from 'next';
-import { headers } from 'next/headers';
+import type { MetadataRoute } from 'next';
 
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  // Пытаемся получить домен из переменной окружения или из заголовков запроса
-  let baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+import { SITE_URL } from '@/config/site';
 
-  if (!baseUrl) {
-    const headersList = await headers();
-    const host = headersList.get('host');
-    const protocol = headersList.get('x-forwarded-proto') || 'https';
-    baseUrl = `${protocol}://${host}`;
-  }
-
+export default function sitemap(): MetadataRoute.Sitemap {
   return [
     {
-      url: baseUrl,
-      lastModified: new Date(),
-      changeFrequency: 'daily',
+      url: SITE_URL,
+      changeFrequency: 'weekly',
       priority: 1,
     },
     {
-      url: `${baseUrl}/about`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/privacy`,
-      lastModified: new Date(),
+      url: `${SITE_URL}/about`,
       changeFrequency: 'monthly',
       priority: 0.5,
+    },
+    {
+      url: `${SITE_URL}/privacy`,
+      changeFrequency: 'yearly',
+      priority: 0.2,
     },
   ];
 }

@@ -1,26 +1,32 @@
-'use client';
+import type { Metadata } from 'next';
 
-import { useState } from 'react';
+import { HomeIntro } from '@/components/HomeIntro';
+import { HomeWeather } from '@/components/HomeWeather';
+import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from '@/config/site';
 
-import { useSettings } from '@/components/SettingsContext';
-import { WeatherDisplay } from '@/components/WeatherDisplay';
-import { SearchLocation } from '@/components/SearchLocation';
-import { CurrentLocation } from '@/components/CurrentLocation';
-import { Coordinates } from '@/model/types';
+export const metadata: Metadata = {
+  alternates: { canonical: '/' },
+  openGraph: { url: '/' },
+};
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: SITE_NAME,
+  url: SITE_URL,
+  description: SITE_DESCRIPTION,
+  applicationCategory: 'WeatherApplication',
+};
 
 export default function HomePage() {
-  const { isUseMyLocation } = useSettings();
-  const [coordinates, setCoordinates] = useState<Coordinates | null>(null);
-
   return (
     <div className="flex flex-col gap-6">
-      {isUseMyLocation ? (
-        <CurrentLocation onSetCoordinates={setCoordinates} />
-      ) : (
-        <SearchLocation onSetCoordinates={setCoordinates} />
-      )}
-
-      <WeatherDisplay coordinates={coordinates} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <HomeIntro />
+      <HomeWeather />
     </div>
   );
 }

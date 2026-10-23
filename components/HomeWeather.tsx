@@ -1,0 +1,26 @@
+'use client';
+
+import { useState } from 'react';
+
+import { useSettings } from '@/components/SettingsContext';
+import { WeatherDisplay } from '@/components/WeatherDisplay';
+import { SearchLocation } from '@/components/SearchLocation';
+import { CurrentLocation } from '@/components/CurrentLocation';
+import { Coordinates } from '@/model/types';
+
+export function HomeWeather() {
+  const { isUseMyLocation } = useSettings();
+  const [coordinates, setCoordinates] = useState<Coordinates | null>(null);
+
+  return (
+    <>
+      {isUseMyLocation ? (
+        <CurrentLocation onSetCoordinates={setCoordinates} />
+      ) : (
+        <SearchLocation onSetCoordinates={setCoordinates} />
+      )}
+
+      <WeatherDisplay coordinates={coordinates} />
+    </>
+  );
+}

@@ -1,10 +1,12 @@
 import { MetadataRoute } from 'next';
 
+import { SITE_DESCRIPTION, SITE_NAME } from '@/config/site';
+
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'Weather For Yesterday',
+    name: SITE_NAME,
     short_name: 'W4Y',
-    description: 'Weather viewing application',
+    description: SITE_DESCRIPTION,
     start_url: '/',
     display: 'standalone',
     background_color: '#ffffff',

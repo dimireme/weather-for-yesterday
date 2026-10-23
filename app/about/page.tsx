@@ -2,15 +2,16 @@
 
 import { Typography, Divider } from 'antd';
 
+import { SITE_NAME } from '@/config/site';
+
 export default function AboutPage() {
   return (
     <div>
       <Typography.Title level={2}>About the App</Typography.Title>
 
       <Typography.Paragraph>
-        <strong>Weather For Yesterday</strong> — a simple and convenient web
-        application for viewing current weather information. The app allows you
-        to quickly find current weather conditions for any location.
+        <strong>{SITE_NAME}</strong> shows yesterday&apos;s weather for a city
+        or your current location, next to today&apos;s conditions.
       </Typography.Paragraph>
 
       <Divider />
@@ -36,8 +37,8 @@ export default function AboutPage() {
             Fahrenheit
           </li>
           <li>
-            <strong>Detailed Information</strong> — hourly weather view with
-            detailed meteorological data
+            <strong>Yesterday and today</strong> — hourly weather for the
+            previous day beside the current day
           </li>
         </ul>
       </Typography.Paragraph>
